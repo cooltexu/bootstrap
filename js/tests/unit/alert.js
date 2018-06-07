@@ -43,7 +43,7 @@ $(function () {
     var $alert = $(alertHTML).bootstrapAlert().appendTo($('#qunit-fixture'))
 
     var closeBtn = $alert.find('.close')[0]
-    EventHandler.trigger(closeBtn, 'click')
+    closeBtn.dispatchEvent(new Event('click'))
     assert.strictEqual($alert.hasClass('show'), false, 'remove .show class on .close click')
   })
 
@@ -58,13 +58,13 @@ $(function () {
 
     assert.notEqual($('#qunit-fixture').find('.alert').length, 0, 'element added to dom')
 
-    EventHandler.on($alert[0], 'closed.bs.alert', function () {
+    $alert[0].addEventListener('closed.bs.alert', function () {
       assert.strictEqual($('#qunit-fixture').find('.alert').length, 0, 'element removed from dom')
       done()
     })
 
     var closeBtn = $alert.find('.close')[0]
-    EventHandler.trigger(closeBtn, 'click')
+    closeBtn.dispatchEvent(new Event('click'))
   })
 
   QUnit.test('should not fire closed when close is prevented', function (assert) {
@@ -73,12 +73,12 @@ $(function () {
     var $alert = $('<div class="alert"/>')
     $alert.appendTo('#qunit-fixture')
 
-    EventHandler.on($alert[0], 'close.bs.alert', function (e) {
+    $alert[0].addEventListener('close.bs.alert', function (e) {
       e.preventDefault()
       assert.ok(true, 'close event fired')
       done()
     })
-    EventHandler.on($alert[0], 'closed.bs.alert', function () {
+    $alert[0].addEventListener('closed.bs.alert', function () {
       assert.ok(false, 'closed event fired')
     })
 
@@ -93,7 +93,7 @@ $(function () {
     var $alert = $el.bootstrapAlert()
     var alertInstance = Data.getData($alert[0], 'bs.alert')
 
-    $alert.one('closed.bs.alert', function () {
+    $alert[0].addEventListener('closed.bs.alert', function () {
       assert.ok('alert closed')
       done()
     })
